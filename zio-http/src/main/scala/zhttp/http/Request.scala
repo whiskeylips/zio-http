@@ -7,10 +7,9 @@ final case class Request(
   content: HttpData[Any, Nothing] = HttpData.empty,
 ) extends HasHeaders
     with HeadersHelpers { self =>
-  val method: Method = endpoint._1
-  val url: URL       = endpoint._2
-  val route: Route   = method -> url.path
-
+  val method: Method                  = endpoint._1
+  val url: URL                        = endpoint._2
+  val route: Route                    = method -> url.path
   def getBodyAsString: Option[String] = content match {
     case HttpData.CompleteData(data) =>
       getCharSet match {
