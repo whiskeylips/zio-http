@@ -33,7 +33,7 @@ private[zhttp] trait HeadersHelpers { self: HasHeaders =>
 
   def getCharSet: Option[Charset] = {
     val charSetList: List[Charset] = headers
-      .filter(_.name == JHttpHeaderNames.CONTENT_TYPE.toString)
+      .filter(_.value.toString.contains("charset="))
       .map(x => JHttpUtil.getCharset(x.value, HTTP_CHARSET))
     charSetList match {
       case ::(head, _) => Some(head)
