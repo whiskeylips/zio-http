@@ -1,5 +1,7 @@
 package zhttp.http
 
+import java.nio.charset.Charset
+
 // REQUEST
 final case class Request(
   endpoint: Endpoint,
@@ -7,15 +9,12 @@ final case class Request(
   content: HttpData[Any, Nothing] = HttpData.empty,
 ) extends HasHeaders
     with HeadersHelpers { self =>
-  val method: Method                  = endpoint._1
-  val url: URL                        = endpoint._2
-  val route: Route                    = method -> url.path
-  def getBodyAsString: Option[String] = content match {
-    case HttpData.CompleteData(data) =>
-      getCharSet match {
-        case Some(value) => Option(new String(data.toArray, value))
-        case None        => Option(data.map(_.toChar).mkString)
-      }
+  val method: Method = endpoint._1
+  val url: URL       = endpoint._2
+  val route: Route   = method -> url.path
+
+  def getBodyAsString(charSet: Charset = HTTP_CHARSET): Option[String] = content match {
+    case HttpData.CompleteData(data) => Option(new String(data.toArray, charSet))
     case _                           => Option.empty
   }
 
